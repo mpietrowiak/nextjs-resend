@@ -7,9 +7,12 @@ export default function NewsletterForm() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/send", {
+    const response = await fetch("/api/newsletter/subscribe", {
       method: "POST",
-      body: JSON.stringify({ email: formData.get("email") }),
+      body: JSON.stringify({
+        email: formData.get("email"),
+        name: formData.get("name"),
+      }),
     });
     const data = await response.json();
     // console.log(data);
@@ -21,15 +24,22 @@ export default function NewsletterForm() {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="flex gap-4 my-4">
+      <input
+        name="name"
+        type="text"
+        placeholder="Name"
+        required
+        className="text-black block placeholder:text-zinc-600 p-2"
+      />
       <input
         name="email"
         type="email"
         placeholder="Email"
         required
-        className="text-black"
+        className="text-black block placeholder:text-zinc-600 p-2"
       />
-      <button>Subscribe</button>
+      <button className="bg-blue-900 font-bold px-4">Subscribe</button>
     </form>
   );
 }
