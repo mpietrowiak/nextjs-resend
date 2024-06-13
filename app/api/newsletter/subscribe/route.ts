@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const uuid = uuidv4();
 
   try {
-    dynamoDb.send(
+    const response = await dynamoDb.send(
       new PutItemCommand({
         TableName: "Subscribers",
         Item: {
@@ -32,19 +32,18 @@ export async function POST(req: Request) {
       })
     );
 
-    const { data, error } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: [email],
-      subject: "Hello world",
-      react: EmailTemplate({ firstName, uuid }),
-      text: "Hello world",
-    });
-
-    if (error) {
-      return Response.json({ error }, { status: 500 });
+    if (response?.$metadata?.httpStatusCode === 200) {
+      try {
+        await resend.emails.send({
+          from: "Acme <onboarding@resend.dev>",
+          to: [email],
+          subject: "You have been subscribed to our newsletter! 🎉",
+          react: EmailTemplate({ firstName, uuid }),
+          text: "You have been subscribed to our newsletter!",
+        });
+      } catch (error) {} //Sentry
     }
-
-    return Response.json(data);
+    return Response.json(response);
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }

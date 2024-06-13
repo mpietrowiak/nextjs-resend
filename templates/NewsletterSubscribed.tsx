@@ -4,8 +4,7 @@ interface EmailTemplateProps {
   firstName: string;
   uuid: string;
 }
-
-export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+const NewsletterSubscribed: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
   uuid,
 }) => (
@@ -27,3 +26,5 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
     </small>
   </div>
 );
+
+export default NewsletterSubscribed;
