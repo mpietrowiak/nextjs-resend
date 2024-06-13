@@ -4,11 +4,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
-export async function GET(req: Request) {
+export async function GET(
+  req: Request,
+  { params }: { params: { subscriptionUuid: string } }
+) {
+  const { subscriptionUuid } = params;
   try {
-    // TODO: Implement your own logic here
     return Response.json({
-      message: "Hello world",
+      subscriptionUuid,
     });
   } catch (error) {
     return Response.json({ error }, { status: 500 });

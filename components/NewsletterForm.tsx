@@ -11,7 +11,7 @@ export default function NewsletterForm() {
       method: "POST",
       body: JSON.stringify({
         email: formData.get("email"),
-        name: formData.get("name"),
+        firstName: formData.get("firstName"),
       }),
     });
     const data = await response.json();
@@ -26,7 +26,7 @@ export default function NewsletterForm() {
   return (
     <form onSubmit={onSubmit} className="flex gap-4 my-4">
       <input
-        name="name"
+        name="firstName"
         type="text"
         placeholder="Name"
         required
