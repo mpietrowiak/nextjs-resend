@@ -1,10 +1,13 @@
+import { getResubscribeUrl } from "@/app/utils/paths";
 import * as React from "react";
 
 interface NewsletterUnsubcribedProps {
+  email: string;
   uuid: string;
 }
 
 const NewsletterUnsubcribed: React.FC<Readonly<NewsletterUnsubcribedProps>> = ({
+  email,
   uuid,
 }) => (
   <div>
@@ -14,9 +17,7 @@ const NewsletterUnsubcribed: React.FC<Readonly<NewsletterUnsubcribedProps>> = ({
 
     <p>
       If you would like to resubscribe, please click{" "}
-      <a href={`https://www.example.com/api/newsletter/subscribe/${uuid}`}>
-        here
-      </a>
+      <a href={getResubscribeUrl(email, uuid)}>here</a>
     </p>
   </div>
 );

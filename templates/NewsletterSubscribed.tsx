@@ -1,12 +1,15 @@
+import { getUnsubscribeUrl } from "@/app/utils/paths";
 import * as React from "react";
 
 interface EmailTemplateProps {
   firstName: string;
   uuid: string;
+  email: string;
 }
 const NewsletterSubscribed: React.FC<Readonly<EmailTemplateProps>> = ({
   firstName,
   uuid,
+  email,
 }) => (
   <div>
     <h1>Welcome to my newsletter, {firstName}!</h1>
@@ -18,11 +21,7 @@ const NewsletterSubscribed: React.FC<Readonly<EmailTemplateProps>> = ({
     </p>
 
     <small>
-      <a
-        href={`${process.env.PRODUCTION_URL}api/newsletter/unsubscribe/${uuid}`}
-      >
-        Unsubscribe
-      </a>
+      <a href={getUnsubscribeUrl(email, uuid)}>Unsubscribe</a>
     </small>
   </div>
 );

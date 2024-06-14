@@ -16,7 +16,7 @@ export default function NewsletterForm() {
     });
     const data = await response.json();
     // console.log(data);
-    if (data?.id) {
+    if (data?.success) {
       alert("Subscribed");
     } else {
       alert("Failed to subscribe");
@@ -39,7 +39,9 @@ export default function NewsletterForm() {
         required
         className="text-black block placeholder:text-zinc-600 p-2"
       />
-      <button className="bg-blue-900 font-bold px-4">Subscribe</button>
+      <button className="bg-blue-900 font-bold px-4 hover:bg-blue-800">
+        Subscribe
+      </button>
     </form>
   );
 }

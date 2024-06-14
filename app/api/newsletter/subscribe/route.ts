@@ -1,11 +1,7 @@
-import { EmailTemplate } from "@/components/email/email-template";
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
-import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-const dynamoDb = new DynamoDBClient({ region: "eu-central-1" });
+import { sendSubscribedEmail } from "@/app/utils/emails";
+import { addSubscriber } from "@/app/utils/subscribers";
 
 export async function POST(req: Request) {
   const { email, firstName } = await req.json();
@@ -19,31 +15,18 @@ export async function POST(req: Request) {
     );
   }
   const uuid = uuidv4();
-
   try {
-    const response = await dynamoDb.send(
-      new PutItemCommand({
-        TableName: "Subscribers",
-        Item: {
-          pk: { S: uuid },
-          sk: { S: uuid },
-          email: { S: email },
-        },
-      })
-    );
-
+    const response = await addSubscriber(email, uuid);
     if (response?.$metadata?.httpStatusCode === 200) {
-      try {
-        await resend.emails.send({
-          from: "Acme <onboarding@resend.dev>",
-          to: [email],
-          subject: "You have been subscribed to our newsletter! 🎉",
-          react: EmailTemplate({ firstName, uuid }),
-          text: "You have been subscribed to our newsletter!",
-        });
-      } catch (error) {} //Sentry
+      await sendSubscribedEmail(email, firstName, uuid);
+      return Response.json({
+        success: true,
+      });
+    } else {
+      return Response.json({
+        success: false,
+      });
     }
-    return Response.json(response);
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }
